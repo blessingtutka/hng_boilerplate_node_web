@@ -1,0 +1,203 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Email Messaging API",
+      "description": "API for email messaging including email validation, OTP, and password reset",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000/api",
+        "description": "Local server"
+      }
+    ],
+    "paths": {
+      "/email/validate": {
+        "post": {
+          "summary": "Send email validation",
+          "description": "Send an email to validate the user's email address",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailRequest"
+                },
+                "example": {
+                  "email": "user@example.com",
+                  "firstName": "John",
+                  "validationLink": "http://example.com/validate?token=abc123"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Email sent successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuccessResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/otp/send": {
+        "post": {
+          "summary": "Send OTP",
+          "description": "Send a one-time password to the user's email",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailRequest"
+                },
+                "example": {
+                  "email": "user@example.com",
+                  "firstName": "John",
+                  "otpCode": "123456"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "OTP sent successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuccessResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/password/reset": {
+        "post": {
+          "summary": "Send password reset link",
+          "description": "Send a password reset link to the user's email",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailRequest"
+                },
+                "example": {
+                  "email": "user@example.com",
+                  "firstName": "John",
+                  "resetLink": "http://example.com/reset?token=abc123"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Password reset link sent successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuccessResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "EmailRequest": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "user@example.com"
+            },
+            "firstName": {
+              "type": "string",
+              "example": "John"
+            },
+            "validationLink": {
+              "type": "string",
+              "example": "http://example.com/validate?token=abc123"
+            },
+            "otpCode": {
+              "type": "string",
+              "example": "123456"
+            },
+            "resetLink": {
+              "type": "string",
+              "example": "http://example.com/reset?token=abc123"
+            }
+          },
+          "required": ["email"]
+        },
+        "SuccessResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "success"
+            },
+            "message": {
+              "type": "string",
+              "example": "Operation completed successfully"
+            }
+          }
+        },
+        "ErrorResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "error"
+            },
+            "message": {
+              "type": "string",
+              "example": "Error message"
+            }
+          }
+        }
+      }
+    }
+  }
+  
