@@ -1,0 +1,10 @@
+{
+  "paths": {
+    "blogs": {
+      "get": {
+        "summary": "Get all users",
+        "description": "Retrieves a list of all users."
+      }
+    }
+  }
+}
