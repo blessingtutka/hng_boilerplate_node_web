@@ -15,9 +15,88 @@
       "bearerAuth": []
     }
   ],
+  "tags": [
+    {
+      "name": "Users/Organisations",
+      "description": "Operations related to users and organisations"
+    },
+    {
+      "name": "Authentication",
+      "description": "Operations related to authentication"
+    },
+    {
+      "name": "Messaging",
+      "description": "Operations related to messaging"
+    },
+    {
+      "name": "Blogs",
+      "description": "Operations related to blogs"
+    }
+  ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "allOf": [
+          {
+            "$ref": "API_SCHEMA_LOGIN.json#/paths/~1auth~1login/post"
+          }
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "allOf": [
+          {
+            "$ref": "API_SCHEMA_LOGIN.json#/paths/~1auth~1register/post"
+          }
+        ]
+      }
+    },
+    "/permissions": {
+      "get": {
+        "tags": ["Authentication"],
+        "allOf": [
+          {
+            "$ref": "API_SCHEMA_LOGIN.json#/paths/~1permissions/get"
+          }
+        ]
+      }
+    },
+    "/email/validate": {
+      "post": {
+        "tags": ["Messaging"],
+        "allOf": [
+          {
+            "$ref": "messaging.json#/paths/~1email~1validate/post"
+          }
+        ]
+      }
+    },
+    "/otp/send": {
+      "post": {
+        "tags": ["Messaging"],
+        "allOf": [
+          {
+            "$ref": "messaging.json#/paths/~1otp~1send/post"
+          }
+        ]
+      }
+    },
+    "/password/reset": {
+      "post": {
+        "tags": ["Messaging"],
+        "allOf": [
+          {
+            "$ref": "messaging.json#/paths/~1password~1reset/post"
+          }
+        ]
+      }
+    },
     "/users": {
       "get": {
+        "tags": ["Users/Organisations"],
         "summary": "Get all users",
         "description": "Retrieves a list of all users.",
         "responses": {
@@ -53,6 +132,7 @@
         }
       },
       "post": {
+        "tags": ["Users/Organisations"],
         "summary": "Create a new user",
         "description": "Creates a new user account.",
         "requestBody": {
@@ -100,6 +180,7 @@
     },
     "/users/{userId}": {
       "get": {
+        "tags": ["Users/Organisations"],
         "summary": "Get a user by ID",
         "description": "Retrieves a user by their unique ID.",
         "parameters": [
@@ -151,6 +232,7 @@
         }
       },
       "put": {
+        "tags": ["Users/Organisations"],
         "summary": "Update a user",
         "description": "Updates an existing user.",
         "parameters": [
@@ -210,6 +292,7 @@
         }
       },
       "delete": {
+        "tags": ["Users/Organisations"],
         "summary": "Delete a user",
         "description": "Deletes a user.",
         "parameters": [
@@ -258,6 +341,7 @@
     },
     "/organisations": {
       "get": {
+        "tags": ["Users/Organisations"],
         "summary": "Get user organisations",
         "security": [
           {
@@ -296,6 +380,7 @@
         }
       },
       "post": {
+        "tags": ["Users/Organisations"],
         "summary": "Create new organisation",
         "security": [
           {
@@ -340,6 +425,7 @@
     },
     "/organisations/{orgId}": {
       "get": {
+        "tags": ["Users/Organisations"],
         "summary": "Get single organisation",
         "security": [
           {
@@ -386,6 +472,7 @@
     },
     "/organisations/{orgId}/users": {
       "post": {
+        "tags": ["Users/Organisations"],
         "summary": "Add user to organisation",
         "security": [
           {
@@ -444,16 +531,58 @@
         }
       }
     },
-    "/blogs": {},
-    "/auth/login": {},
-    "/auth/register": {},
-    "/email": {}
+
+    "/blogs": {
+      "get": {
+        "tags": ["Blogs"],
+        "allOf": [
+          {
+            "$ref": "BLOG_SCHEMA.json#/paths/~1blogs/get"
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Blogs"],
+        "allOf": [
+          {
+            "$ref": "BLOG_SCHEMA.json#/paths/~1blogs/post"
+          }
+        ]
+      }
+    },
+    "/blogs/{blogId}": {
+      "get": {
+        "tags": ["Blogs"],
+        "allOf": [
+          {
+            "$ref": "BLOG_SCHEMA.json#/paths/~1blogs~1{blogId}/get"
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Blogs"],
+        "allOf": [
+          {
+            "$ref": "BLOG_SCHEMA.json#/paths/~1blogs~1{blogId}/put"
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Blogs"],
+        "allOf": [
+          {
+            "$ref": "BLOG_SCHEMA.json#/paths/~1blogs~1{blogId}/delete"
+          }
+        ]
+      }
+    }
   },
   "components": {
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
     "schemas": {
@@ -510,6 +639,33 @@
           }
         },
         "required": ["name"]
+      },
+      "Blog": {
+        "$ref": "BLOG_SCHEMA.json#/components/schemas/Blog"
+      },
+      "ActivityLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "userId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["action", "userId"]
       }
     },
     "responses": {
@@ -606,7 +762,6 @@
           }
         }
       }
-    },
-    "notFound": {}
+    }
   }
 }
